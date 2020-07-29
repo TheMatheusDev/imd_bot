@@ -17,7 +17,7 @@ Automatizando sua nota do IMD TEC/FIC.
 1. [Download](https://github.com/TheusKhan/imd_bot/archive/master.zip).
 2. Extrair.
 3. Executar `$ pip install -r requirements.txt`.
-4. Executar `$ python BOT.py`
+4. Executar `$ python BOT.py`.
 5. ["Iniciar"](#menu)
 
 * Caso o navegador abra e feche :
@@ -31,8 +31,8 @@ Automatizando sua nota do IMD TEC/FIC.
 2. [Mudar login, senha e TEC/FIC.](#configurações).
 3. Sair - Irá fechar tudo e sair.
 
-## Mudar login, senha e TEC/FICL.
-1. Abrir `run.bat`
+## Mudar login, senha e TEC/FIC.
+1. Executar o bot.
 2. Digite "2" para abrir as opções.
 
 * Login - É possível mudar o login.
