@@ -28,7 +28,7 @@ Automatizando sua nota do IMD TEC/FIC.
 
 ## Menu
 1. Iniciar - Irá iniciar e será necessário definir um nome de usuário e senha antes de começar.
-2. [Mudar login, senha e TEC/FIC.](#configurações).
+2. [Mudar login, senha e TEC/FIC](#configurações).
 3. Sair - Irá fechar tudo e sair.
 
 ## Mudar login, senha e TEC/FIC.
