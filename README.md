@@ -27,7 +27,7 @@ Automatizando sua nota do IMD TEC/FIC.
     * Verifique qual é a sua versão do Firefox em `Menu>Ajuda>Sobre o Firefox`
 
 ## Menu
-1. Iniciar - Irá iniciar e será necessário definir um nome de usuário e senha antes de começar.
+1. Iniciar - Irá iniciar e será necessário definir um login e senha na primeira execução.
 2. [Mudar login, senha e TEC/FIC](#configurações).
 3. Sair - Irá fechar tudo e sair.
 
