@@ -2,16 +2,16 @@
 $workingdir = (Get-Location).Path
 if($PSVersiontable.PSVersion.Major -lt 3)
 {
-    Write-Warning "Please download Python and place it in the same folder as this script."
-    Write-Output "Download from: https://www.python.org/ftp/python/3.8.5/python-3.8.5-embed-amd64.zip"
-    Write-Output ("Save to this directory: $workingdir `nand rename it to python.zip" -f (Get-Location).Path)
-    Write-Output "Download from: https://bootstrap.pypa.io/get-pip.py"
-    Write-Output ("Save to this directory: $workingdir" -f (Get-Location).Path)
-    Read-Host "Press Enter when you're done!"
+    Write-Warning "Por favor, baixe o Pyhon e o coloque na mesma pasta do script."
+    Write-Output "Baixe em: https://www.python.org/ftp/python/3.9.0/python-3.9.0-embed-amd64.zip"
+    Write-Output ("Salve nesse diretório: $workingdir `n e renomeie para python.zip" -f (Get-Location).Path)
+    Write-Output "Baixe em: https://bootstrap.pypa.io/get-pip.py"
+    Write-Output ("Salve nesse diretório: $workingdir" -f (Get-Location).Path)
+    Read-Host "Pressione Enter quando estiver pronto!"
 }
 else
 {
-    Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.8.5/python-3.8.5-embed-amd64.zip -OutFile python.zip
+    Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.9.0/python-3.9.0-embed-amd64.zip -OutFile python.zip
     Invoke-WebRequest -Uri https://bootstrap.pypa.io/get-pip.py -OutFile get-pip.py
 }
 if($PSVersiontable.PSVersion.Major -lt 5)
@@ -23,7 +23,7 @@ if($PSVersiontable.PSVersion.Major -lt 5)
     }
     else
     {
-        Write-Warning "Directory $work\python already found. Delete if necessary!"
+        Write-Warning "Diretório $work\python encontrado. Exclua se necessário!"
     }
 }
 else
@@ -31,8 +31,8 @@ else
     Expand-Archive -LiteralPath python.zip -DestinationPath python\ -Force
 }
 
-((Get-Content python\python38._pth)) -Replace "#import", "import" | Set-Content python\python38._pth
-Set-Content python\python38._pth -value "../", (Get-Content python\python38._pth)
+((Get-Content python\python39._pth)) -Replace "#import", "import" | Set-Content python\python39._pth
+Set-Content python\python39._pth -value "../", (Get-Content python\python39._pth)
 
 python\python.exe get-pip.py
 python\python.exe -m pip install -r requirements.txt

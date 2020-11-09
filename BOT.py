@@ -41,7 +41,7 @@ def init_web_driver():
                     web_driver = webdriver.Chrome('chromedriver', options=options)  # v81.0.4044.69
                     return web_driver
         except Exception as e:
-            print(f'Failed to initialize Chromedriver: {e}')
+            print(f'Falha ao iniciar Chromedriver: {e}')
             print('Instale/Atualize o seu Firefox/Chrome ou Geckodriver/Chromedriver.')
             time.sleep(5)
             quit()
@@ -53,7 +53,8 @@ def create_default_files():
         data = {
             "login": "",
             "senha": "",
-            "website": "TEC"
+            "website": "TEC",
+            "modulo": "Básico"
         }
         with open('config.json', 'w') as config_file:
             json.dump(data, config_file, indent=2)
@@ -82,7 +83,8 @@ def open_config_menu():
             print(f' 1 - Mudar login [Atual: {data["login"]}]\n',
                   f'2 - Mudar senha [Atual: {data["senha"]}]\n',
                   f'3 - Alternar entre IMDTEC e IMDFIC [Atual: {data["website"]}]\n',
-                  '4 - Apagar todos os parâmetros\n',
+                  f'4 - Alternar entre os módulos Básico e Intermediário [Atual: {data["modulo"]}]\n',
+                  f'5 - Apagar todos os parâmetros\n',
                   '0 - Voltar.')
             option_to_config = input('> ')
             cls()
@@ -120,6 +122,12 @@ def open_config_menu():
                     data['website'] = 'TEC'
 
             elif option_to_config == '4':
+                if data['modulo'] == 'Básico':
+                    data['modulo'] = 'Intermediário'
+                else:
+                    data['modulo'] = 'Básico'
+
+            elif option_to_config == '5':
                 data['login'], data['senha'] = '', ''
                 cls()
                 print(f'Todos os parâmetros resetados! Login: {data["login"]}; Senha: {data["senha"]}.\n')
@@ -144,7 +152,8 @@ def config_before_start():
             print('É obrigatório definir os seguintes parâmetros abaixo:\n\n',
                   f'1 - Definir login [Atual: {data["login"]}]\n',
                   f'2 - Definir senha [Atual: {data["senha"]}]\n',
-                  f'3 - Alternar entre IMDTEC e IMDFIC [Atual: {data["website"]}]')
+                  f'3 - Alternar entre IMDTEC e IMDFIC [Atual: {data["website"]}]\n',
+                  f'4 - Alternar entre os módulos Básico e Intermediário [Atual: {data["modulo"]}]')
             option_to_config = input('> ')
             cls()
             if option_to_config == '1':
@@ -162,6 +171,13 @@ def config_before_start():
                     data['website'] = 'FIC'
                 else:
                     data['website'] = 'TEC'
+
+            elif option_to_config == '4':
+                if data['modulo'] == 'Básico':
+                    data['modulo'] = 'Intermediário'
+                else:
+                    data['modulo'] = 'Básico'
+
             else:
                 print('Opção Inválida.\n')
 
@@ -182,46 +198,51 @@ class Botoes:
         campo_senha = '//*[@id="input-21"]'
         continue_1 = '//*[@id="app"]/div/main/div/div/div/div[3]/div/div/div[1]/div/div/v-card-action/button/span'
         continue_2 = '//*[@id="app"]/div/main/div/div/div/div[3]/div/div/div[2]/div/div/form/v-card-action/button'
+        # Tela de login após errar
+        erro_login = '/html/body/div[1]/div[2]/div/div/section/div/div[2]/div/div/div/div/div[2]/div/form/div[1]/input'
+        erro_senha = '//*[@id="password"]'
+        erro_botao = '//*[@id="loginbtn"]'
 
     class Conteudo:
         acessar_conteudo = '//*[@id="app"]/div[2]/nav/div[1]/div/div[3]/a[3]'
-        acessar_materia = f'/html/body/div[1]/div[2]/ul/li[{aleatorio(2, 6)}]/div/div/a'
-        acessar_aula = f'/html/body/div[1]/div[2]/ul/li[{aleatorio(4, 10)}]/div[1]/div/div[2]/a'
+        acessar_aula = f'/html/body/div[1]/div[2]/ul/li[{aleatorio(1, 10)}]/div[1]/div/div[2]/a'
+
+        # Módulo Básico
+        acessar_materia_b = f'/html/body/div[1]/div[2]/ul/li[{aleatorio(2, 6)}]/div/div/a'
+
+        # Módulo Intermediário
+        acessar_materia_i = f'/html/body/div[1]/div[2]/ul/li[{aleatorio(1, 2)}]/div/div/a'
+
 
 def tela_login(Botoes):
     # Tela de login.
     # Login usuário
-    wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Login.campo_login)))
     try:
+        wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Login.campo_login)))
         browser.find_element_by_xpath(Botoes.Login.campo_login).send_keys(get_config_setting('login'))
+        browser.find_element_by_xpath(Botoes.Login.continue_1).click()
     except:
-        cls()
-        print('O seu login está errado. Verifique seu login.\n')
-        config_before_start()
-        login = get_config_setting('login')
-        senha = get_config_setting('senha')
-        url = get_config_setting('website')
-        if url == 'TEC':
-            url = 'https://imdtec.imd.ufrn.br/?login=true'
-        else:
-            url = 'https://imdfic.imd.ufrn.br/?login=true'
-    browser.find_element_by_xpath(Botoes.Login.continue_1).click()
+        print('Ocorreu um erro durante o login, por favor tente novamente.')
+        pass
+
+
+def tela_senha(Botoes):
     # Login da senha
-    wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Login.campo_senha)))
     try:
+        wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Login.campo_senha)))
         browser.find_element_by_xpath(Botoes.Login.campo_senha).send_keys(get_config_setting('senha'))
+        browser.find_element_by_xpath(Botoes.Login.continue_2).click()
     except:
-        cls()
-        print('A sua seha está errada. Verifique sua senha.\n')
-        config_before_start()
-        login = get_config_setting('login')
-        senha = get_config_setting('senha')
-        url = get_config_setting('website')
-        if url == 'TEC':
-            url = 'https://imdtec.imd.ufrn.br/?login=true'
-        else:
-            url = 'https://imdfic.imd.ufrn.br/?login=true'
-    browser.find_element_by_xpath(Botoes.Login.continue_2).click()
+        pass
+
+def erro_login(Botoes):
+    try:
+        wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Login.erro_login)))
+        browser.find_element_by_xpath(Botoes.Login.erro_login).send_keys(get_config_setting('login'))
+        browser.find_element_by_xpath(Botoes.Login.erro_senha).send_keys(get_config_setting('senha'))
+        browser.find_element_by_xpath(Botoes.Login.erro_botao).click()
+    except:
+        pass
 
 
 # Tela principal do IMDTEC (Acesso ao material, Moodle, bugs, etc.)
@@ -233,15 +254,21 @@ def material(Botoes):
     # Desce a página
     browser.execute_script("window.scrollBy(0,250)", "")
     # Clica na disciplina aleatoria
-    wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Conteudo.acessar_materia)))
-    browser.find_element_by_xpath(Botoes.Conteudo.acessar_materia).click()
+    if get_config_setting('modulo') == "Básico":
+        wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Conteudo.acessar_materia_b)))
+        browser.find_element_by_xpath(Botoes.Conteudo.acessar_materia_b).click()
+    else:
+        wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Conteudo.acessar_materia_i)))
+        browser.find_element_by_xpath(Botoes.Conteudo.acessar_materia_i).click()
     # Clica na aula
     browser.execute_script("window.scrollBy(0,250)", "")
     wait.until(ec.presence_of_element_located((By.XPATH, Botoes.Conteudo.acessar_aula)))
     browser.find_element_by_xpath(Botoes.Conteudo.acessar_aula).click()
     browser.execute_script("window.scrollBy(0,250)", "")
 
+
     # Espera entre (3 minutos) e (6 minutos e 30 segundos).
+    cls()
     while True:
         def countdown(t):
             while t:
@@ -255,6 +282,7 @@ def material(Botoes):
             time.sleep(1)
             cls()
 
+
         countdown(aleatorio(180, 390))
         # Clica no botão de próxima página
         prox = ActionChains(browser)
@@ -264,7 +292,6 @@ def material(Botoes):
         except:
             prox.send_keys('a').perform()
             browser.execute_script("window.scrollBy(0,250)", "")
-
 
 if __name__ == "__main__":
     create_default_files()
@@ -291,7 +318,12 @@ if __name__ == "__main__":
 
             wait = WebDriverWait(browser, 10)
             tela_login(Botoes)
-            material(Botoes)
+            tela_senha(Botoes)
+            try:
+                material(Botoes)
+            except:
+                erro_login(Botoes)
+                material(Botoes)
 
         elif option == '2':
             cls()
